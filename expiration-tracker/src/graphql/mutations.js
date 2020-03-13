@@ -10,6 +10,7 @@ export const createBook = /* GraphQL */ `
       id
       title
       author
+      expDate
     }
   }
 `;
@@ -22,6 +23,7 @@ export const updateBook = /* GraphQL */ `
       id
       title
       author
+      expDate
     }
   }
 `;
@@ -34,6 +36,7 @@ export const deleteBook = /* GraphQL */ `
       id
       title
       author
+      expDate
     }
   }
 `;

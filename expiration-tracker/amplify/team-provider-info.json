@@ -10,6 +10,11 @@
             "StackName": "amplify-expiration-tracker-test-184530",
             "StackId": "arn:aws:cloudformation:us-east-1:698818887935:stack/amplify-expiration-tracker-test-184530/3a6ad3f0-6329-11ea-b46a-0e58925d1f8e",
             "AmplifyAppId": "d1ogwvpyi8wbst"
+        },
+        "categories": {
+            "auth": {
+                "expirationtracker80becc77": {}
+            }
         }
     }
 }

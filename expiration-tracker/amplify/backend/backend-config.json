@@ -16,5 +16,13 @@
 				}
 			}
 		}
+	},
+	"auth": {
+		"expirationtracker80becc77": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"customAuth": false
+		}
 	}
 }

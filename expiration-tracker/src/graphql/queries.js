@@ -7,6 +7,7 @@ export const getBook = /* GraphQL */ `
       id
       title
       author
+      expDate
     }
   }
 `;
@@ -21,6 +22,7 @@ export const listBooks = /* GraphQL */ `
         id
         title
         author
+        expDate
       }
       nextToken
     }

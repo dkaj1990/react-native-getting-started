@@ -4,12 +4,13 @@
     import Amplify from 'aws-amplify';
     import config from './aws-exports';
     Amplify.configure(config);
-    import { API, graphqlOperation } from 'aws-amplify';
+    import { API, graphqlOperation} from 'aws-amplify';
+    import { withAuthenticator } from 'aws-amplify-react-native'
     const ListBooks = `
     query {
       listBooks {
         items {
-          id title author
+          id title author expDate
         }
       }
     }
@@ -19,18 +20,23 @@
       createBook(input: {
         title: $title
         author: $author
+        expDate: $expDate
       }) {
-        id title author
+        id title author expDate
       }
     }
     `;
-    export default class App extends React.Component {
+   class App extends React.Component {
       state = {
         title: '',
         author: '',
+        expDate: '',
         books: []
       };
       async componentDidMount() {
+        const user = await Auth.currentAuthenticatedUser()
+        console.log('user:', user)
+        console.log('user info:', user.signInUserSession.idToken.payload)
         try {
           const books = await API.graphql(graphqlOperation(ListBooks));
           console.log('books: ', books);
@@ -44,10 +50,10 @@
       };
       addBook = async () => {
         if (this.state.title === '' || this.state.author === '') return;
-        const book = { title: this.state.title, author: this.state.author };
+        const book = { title: this.state.title, author: this.state.author, expDate:this.state.expDate };
         try {
           const books = [...this.state.books, book];
-          this.setState({ books, title: '', author: '' });
+          this.setState({ books, title: '', author: '', expDate:'' });
           console.log('books: ', books);
           await API.graphql(graphqlOperation(AddBook, book));
           console.log('success');
@@ -62,19 +68,26 @@
               style={styles.input}
               value={this.state.title}
               onChangeText={val => this.onChangeText('title', val)}
-              placeholder="What do you want to read?"
+              placeholder="What do you want to track?"
             />
             <TextInput
               style={styles.input}
               value={this.state.author}
               onChangeText={val => this.onChangeText('author', val)}
-              placeholder="Who wrote it?"
+              placeholder="Who does it belong to?"
             />
-            <Button onPress={this.addBook} title="Add to TBR" color="#eeaa55" />
+            <TextInput
+              style={styles.input}
+              value={this.state.expDate}
+              onChangeText={val => this.onChangeText('expDate', val)}
+              placeholder="When does it expire?"
+            />
+            <Button onPress={this.addBook} title="Add to Track-It" color="#eeaa55" />
             {this.state.books.map((book, index) => (
               <View key={index} style={styles.book}>
                 <Text style={styles.title}>{book.title}</Text>
                 <Text style={styles.author}>{book.author}</Text>
+                <Text style={styles.expDate}>{book.expDate}</Text>
               </View>
             ))}
           </View>
@@ -100,5 +113,11 @@
         paddingVertical: 10
       },
       title: { fontSize: 16 },
-      author: { color: 'rgba(0, 0, 0, .5)' }
-    });
+      author: { color: 'rgba(0, 0, 0, .5)' },
+      expDate:{color: 'rgba(0, 0, 0, .5)'}
+      
+    })
+
+    export default withAuthenticator(App, {
+      includeGreetings: true
+    })
